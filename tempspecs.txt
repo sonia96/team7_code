@@ -1,0 +1,10 @@
+﻿Power Supply
+
+12V, 7AHRechargable Lead Acid Battery with a 12V and 6V output
+
+Heating
+
+The heating subsystem consists of:
+
+ A 3Ω, 30W heater element, that can be immersed 
+10kΩ NTC Termistor (ND06P00103K) http://www.farnell.com/datasheets/86133.pdf
