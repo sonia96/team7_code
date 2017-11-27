@@ -1,44 +1,54 @@
 #include <math.h>
 
-//there may be some bugs as I haven't tested it yet with actual circuitry
-//the pin numbers and variables will most probably be changed depending on what Anna wants to do with the circuit
 const int thermistorInputPin = 5;
 const int heaterOutputPin = 6; 
-float temperature;
-int T_LB, T_UB;
+float temperature = 0;
+int T_LB = 25;
+int T_UB = 35;
 float getTemperature(int pinNumber);
 
 void setup()
 {
   Serial.begin(9600); 
   
-  pinMode(heaterOutputPin, OUTPUT);
+  pinMode(heaterOutputPin, OUTPUT); 
 }
 
 void loop()
 {
   //Temperature code:
   temperature = getTemperature(thermistorInputPin);
+  
   if(temperature <= T_LB+2)
   {
     digitalWrite(heaterOutputPin, HIGH); //turn heater on
   }
-  else if(temperature >= T_UB-3)
+  else if(temperature >= T_UB-4)
   {
     digitalWrite(heaterOutputPin, LOW); //turn heater off
   }
-  delay(50);
+  
+  Serial.println(temperature);
+  delay(500);
 }
 
-//Taken from my C Arduino coursework (Mohammed Chouman)
-//Use the Steinhart-Hart equation to convert to degrees C
-float getTemperature(int pinNumber) 
+//equation to calculate temperature (using the thermistor given) is taken from the following website:
+//https://www.allaboutcircuits.com/projects/measuring-temperature-with-an-ntc-thermistor/
+float getTemperature(int pinNumber)
 {
- int rawADC = analogRead(pinNumber);
- rawADC -= 200; 
- float temp;
- temp = logf(((10240000/rawADC) - 10000));
- temp = 1 / (0.001129148 +
- (0.000234125 + (0.0000000876741 * temp * temp ))* temp );
- return temp - 273.15; // Convert Kelvin to Celsius
+  float temperature = 0;
+  float thermistorResistence = 0;
+  const float RESISTOR = 10000.0; //10,000 ohm resistor being used in series with thermistor
+  const float MAX_ADC = 1023.0;
+  const float BETA = 4220.0; //taken from thermistor data sheet
+  const float ROOM_TEMP = 298.15; //in kelvin
+  const float THERMISTOR_ROOM_TEMP = 10000.0; //resistence of the thermistor at 25 degrees Celcius
+  
+  float rawADC = analogRead(pinNumber); //read p.d. across resistor
+  thermistorResistence = RESISTOR * ( (MAX_ADC / rawADC) - 1); //calculate resistence of thermistor from p.d. read previously 
+  //calculate temperature using equation 1/t = 1/T + (1/BETA) * ln(r/R), where t is temperature, T is 25 degrees Celcius, 
+  //BETA is a constant specific to the thermistor, r is resistence of the thermistor, and R is resistence of the thermistor at 25 degrees Celcius.
+  temperature = (BETA * ROOM_TEMP) / (BETA + (ROOM_TEMP * logf(thermistorResistence / THERMISTOR_ROOM_TEMP)));
+  return temperature - 273.15; //convert from kelvin to degrees Celcius
 }
+
