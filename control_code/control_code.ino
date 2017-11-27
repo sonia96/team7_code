@@ -29,7 +29,10 @@ void loop()
   }
   
   Serial.println(temperature);
-  delay(500);
+  delay(200);
+  
+  //Stirring and pH code:
+  
 }
 
 //equation to calculate temperature (using the thermistor given) is taken from the following website:
