@@ -29,6 +29,10 @@ void title(){
   stroke(160);
   rect(-10,0,1300,110,0,0,18,18);
   fill(30);
+  textSize(20);
+  text("Temperature (°C):",50,240);
+  text("pH Value:",50,390);
+  text("Stirring Speed (rpm):", 50,540);
   textSize(64);
   text("Bioreactor UI",430,80);
   textSize(35);
@@ -49,15 +53,15 @@ void dataDisplay(){
   stroke(150);
   fill(153);
   rect(50,250,250,50,10,10,10,10);
-  rect(50,350,250,50,10,10,10,10);
-  rect(50,450,250,50,10,10,10,10);
+  rect(50,400,250,50,10,10,10,10);
+  rect(50,550,250,50,10,10,10,10);
   fill(30);
   textSize(30);
   text(temp.get(temp.size()-1), 150, 290);
-  text(ph.get(ph.size()-1), 150, 390);
-  text(stirSpeed.get(stirSpeed.size()-1), 150, 490);
+  text(ph.get(ph.size()-1), 150, 440);
+  text(stirSpeed.get(stirSpeed.size()-1), 150, 590);
   line(340,111,340,700);
-  delay(3000);
+  delay(1000);
 }
 
 void adjustment(){
@@ -76,35 +80,18 @@ void log(){
   rect(900,130,360,529);
 }
 
-void getValues()
-{
+void getValues(){
   String val = "";
-  for (int i = 0; i < 3; i++)
-  {
-    
+  for (int i = 0; i < 3; i++){
     val += int(random(50));
     if ( i != 2)
-    {
       val += ',';
-    }
     else
-    {
       val += '\n';
-    }
-      
   }
-  println(val);
-  
   String[] val1 = split(val, ',');
-  
   int[] val2 = int(trim(val1));
-  
   temp.append(val2[0]);
   ph.append(val2[1]);
   stirSpeed.append(val2[2]);
-  
-  println(temp);
-  println(ph);
-  println(stirSpeed);
-  delay(2000);
 }
